@@ -1,4 +1,5 @@
 
+from tkinter import  *
 # получает 4 числа. возвращает 1 число. Высчитывает расстояние между 2 точками на плоскости
 def r(coord_x, coord_x2, coord_y, coord_y2):
     return ((coord_x - coord_x2) ** 2 + (coord_y - coord_y2) ** 2) ** 0.5
@@ -27,6 +28,10 @@ def count_a(f, m):
 # получает скорость, старую координату и время. возвращает координату
 def count_coord(start_coord, v, t):
     return v * t + start_coord
+
+root = Tk()
+canvas = Canvas(root, width = 1500, height = 1500, bg = "white")
+canvas.pack()
 
 # количество тел
 print('Введите количество тел')
@@ -60,6 +65,9 @@ dt = 0.01
 # время с начала работы модели
 t = 0
 
+# радиус точки на экране
+point_size = 2
+
 while t < 100:
     for i in range(0, n):
 
@@ -70,10 +78,13 @@ while t < 100:
 
         # пересчет значений по у для всех тел
         ay[i] = count_a(count_f(y, y[i], x, x[i], n), m[i])
-        vy[i] = count_v(ay[i], ay[i], dt)
+        vy[i] = count_v(vy[i], ay[i], dt)
         y[i] = count_coord(y[i], vy[i], dt)
 
-        if ((t * 10) % 10 == 0):
+        if (int(t * 10) % 10 == 0):
             print("Тело номер %s имеет координаты" % (i + 1), x[i], 'и', y[i])
-
+            canvas.create_oval(int(x[i] + 1) - point_size, int(y[i] + 1) - point_size, int(x[i] + 1) + point_size, int(y[i] + 1) + point_size, fill = 'black')
+            root.update()
     t+=dt
+
+root.mainloop()
