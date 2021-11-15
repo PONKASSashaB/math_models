@@ -15,7 +15,6 @@ def count_f (coordS_first, our_coord_first, coordS_second, our_coord_second, n):
             fx.append(-(our_coord_first - coordS_first[i]) / r(coordS_second[i], our_coord_second, coordS_first[i], our_coord_first))
             sum_f += fx[len(fx) - 1]
     return sum_f
-print('Введите количество тел')
 
 #  получает старую скорость, ускорение и время. возвращает новую скорость
 def count_v(old_v, a, time):
@@ -30,6 +29,7 @@ def count_coord(start_coord, v, t):
     return v * t + start_coord
 
 # количество тел
+print('Введите количество тел')
 n = int(input())
 
 print('Введите скорости сначала по оси х затем по оси у')
@@ -54,11 +54,13 @@ ay = [-1] * n
 fx = [-1] * (n - 1)
 fy = [-1] * (n - 1)
 
-# время
+# время между пересчетами
 dt = 0.01
 
-help_var = 0
-while help_var < 10 ** 3:
+# время с начала работы модели
+t = 0
+
+while t < 100:
     for i in range(0, n):
 
         # пересчет значений по х для всех тел
@@ -70,5 +72,8 @@ while help_var < 10 ** 3:
         ay[i] = count_a(count_f(y, y[i], x, x[i], n), m[i])
         vy[i] = count_v(ay[i], ay[i], dt)
         y[i] = count_coord(y[i], vy[i], dt)
-        print("Тело номер %s имеет координаты" % (i + 1), x[i], 'и', y[i])
-    help_var+=1
+
+        if ((t * 10) % 10 == 0):
+            print("Тело номер %s имеет координаты" % (i + 1), x[i], 'и', y[i])
+
+    t+=dt
