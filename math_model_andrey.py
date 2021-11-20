@@ -29,6 +29,7 @@ def count_a(f, m):
 def count_coord(start_coord, v, t):
     return v * t + start_coord
 
+#создание холста
 root = Tk()
 canvas = Canvas(root, width = 1500, height = 1500, bg = "white")
 canvas.pack()
@@ -82,7 +83,11 @@ while t < 100:
         y[i] = count_coord(y[i], vy[i], dt)
 
         if (int(t * 10) % 10 == 0):
+
+            #вывод
             print("Тело номер %s имеет координаты" % (i + 1), x[i], 'и', y[i])
+
+            #рисуем
             canvas.create_oval(int(x[i] + 1) - point_size, int(y[i] + 1) - point_size, int(x[i] + 1) + point_size, int(y[i] + 1) + point_size, fill = 'black')
             root.update()
     t+=dt
