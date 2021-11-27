@@ -1,4 +1,4 @@
-
+import time
 from tkinter import  *
 # получает 4 числа. возвращает 1 число. Высчитывает расстояние между 2 точками на плоскости
 def r(coord_x, coord_x2, coord_y, coord_y2):
@@ -29,10 +29,20 @@ def count_a(f, m):
 def count_coord(start_coord, v, t):
     return v * t + start_coord
 
-#создание холста
+# создание холста
+
+#ширина и длина холста
+width_canvas = 1500
+height_canvas = 1500
+
 root = Tk()
-canvas = Canvas(root, width = 1500, height = 1500, bg = "white")
+canvas = Canvas(root, width = width_canvas, height = height_canvas, bg = "white")
 canvas.pack()
+
+#рисует точку по координатам и выводим координаты тела; получает х, у, номер тела для вывода и размер точки
+def out(x, y, i, point_size):
+    print("Тело номер %s имеет координаты" % i, x, 'и', y)
+    canvas.create_oval(int(x + 1) - point_size, int(y + 1) - point_size, int(x + 1) + point_size, int(y + 1) + point_size, fill='black')
 
 # количество тел
 print('Введите количество тел')
@@ -61,7 +71,7 @@ fx = [-1] * (n - 1)
 fy = [-1] * (n - 1)
 
 # время между пересчетами
-dt = 0.01
+dt = 1
 
 # время с начала работы модели
 t = 0
@@ -70,8 +80,8 @@ t = 0
 point_size = 2
 
 while t < 100:
+    canvas.create_rectangle(0, 0, height_canvas, width_canvas, fill="white")
     for i in range(0, n):
-
         # пересчет значений по х для всех тел
         ax[i] = count_a(count_f(x, x[i], y, y[i], n), m[i])
         vx[i] = count_v(vx[i], ax[i], dt)
@@ -82,14 +92,9 @@ while t < 100:
         vy[i] = count_v(vy[i], ay[i], dt)
         y[i] = count_coord(y[i], vy[i], dt)
 
-        if (int(t * 10) % 10 == 0):
-
-            #вывод
-            print("Тело номер %s имеет координаты" % (i + 1), x[i], 'и', y[i])
-
-            #рисуем
-            canvas.create_oval(int(x[i] + 1) - point_size, int(y[i] + 1) - point_size, int(x[i] + 1) + point_size, int(y[i] + 1) + point_size, fill = 'black')
-            root.update()
+        #вывод
+        out(x[i], y[i], i + 1, point_size)
+    root.update()
     t+=dt
 
 root.mainloop()
