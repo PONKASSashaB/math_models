@@ -12,12 +12,12 @@ def r(coord_x, coord_x2, coord_y, coord_y2):
 '''
 def count_f (coordS_first, our_coord_first, coordS_second, our_coord_second, n, array_r, k):
     sum_f = 0
-    fx = []
+    f = []
     for i in range(n):
         real_r = r(coordS_second[i], our_coord_second, coordS_first[i], our_coord_first)
         if (real_r != 0):
-            fx.append(-k * (real_r - array_r[i]) * (our_coord_first - coordS_first[i]) / real_r)
-            sum_f += fx[len(fx) - 1]
+            f.append(k * (real_r - array_r[i]) * (our_coord_first - coordS_first[i]) / real_r)
+            sum_f += f[len(f) - 1]
     return sum_f
 
 #  получает старую скорость, ускорение и время. возвращает новую скорость
@@ -34,7 +34,7 @@ def count_coord(start_coord, v, t):
 
 # создание холста
 
-#ширина и длина холста
+# ширина и длина холста
 width_canvas = 1000
 height_canvas = 1000
 
@@ -42,12 +42,12 @@ root = Tk()
 canvas = Canvas(root, width = width_canvas, height = height_canvas, bg = "white")
 canvas.pack()
 
-#рисует точку по координатам и выводим координаты тела; получает х, у, номер тела для вывода и размер точки
+# рисует точку по координатам и выводим координаты тела; получает х, у, номер тела для вывода и размер точки
 def out(x, y, i, point_size):
     print("Тело номер %s имеет координаты" % i, x, 'и', y)
     canvas.create_oval(int(x + 1) - point_size, int(y + 1) - point_size, int(x + 1) + point_size, int(y + 1) + point_size, fill='black')
 
-#ввод с клавиатуры
+# ввод с клавиатуры
 '''
 # количество тел
 print('Введите количество тел')
@@ -76,8 +76,11 @@ m = list(map(int, input().split()))
 
 # автоматическое создание переменных
 
-# количество тел; точный квадрат (пока что тела образуют только квадрат)
-n = 100
+# сторона квадрата, образованного телами, четное
+number_of_points_on_line = 6
+
+# число тел
+n = number_of_points_on_line * number_of_points_on_line
 
 #массы
 m = [-1] * n
@@ -91,23 +94,52 @@ vy = [-1] * n
 #координаты
 x = [-1] * n
 y = [-1] * n
-# вспомогательная переменная
-index = 0
+
+# промедуток между соседними телами, четный
+step = 10
+
+# вспомогательная переменные
+index = n - 1
+if (number_of_points_on_line % 2 == 1):
+    helpvarx, helpvary = -(number_of_points_on_line // 2) * step, -(number_of_points_on_line // 2) * step
+else:
+    helpvarx, helpvary = -((number_of_points_on_line - 1) // 2) * step - step // 2, -((number_of_points_on_line - 1) // 2) * step - step // 2
+
+start_helpvarx = helpvarx
 # создание реальных значений для велечин
-for i in range(1, int(n ** 0.5 + 1) ):
-    for j in range(1, int(n ** 0.5 + 1)):
-        x[index] = j * 10 + 100
-        y[index] = i * 10 + 100
-        m[index] = random.randint(1, 10)
+while index >= 0:
+    for j in range(number_of_points_on_line):
+        x[index] = helpvarx
+        y[index] = helpvary
+        m[index] = 5
         vx[index] = 0
         vy[index] = 0
-        index += 1
+        index -= 1
+        if (index < 0):
+            break
+
+        x[index] = helpvarx * -1
+        y[index] = helpvary * -1
+        m[index] = 5
+        vx[index] = 0
+        vy[index] = 0
+        index -= 1
+        if (index < 0):
+            break
+
+        helpvarx += step
+    helpvarx = start_helpvarx
+    helpvary += step
+
+for i in range(n):
+    y[i] += height_canvas // 2
+    x[i] += width_canvas // 2
 array_r = [[-1] * n] * n
 for i in range(0, n):
-    for j in range(i + 1, n):
+    for j in range(i, n):
         array_r[i][j] = r(x[i], x[j], y[i], y[j])
-        array_r[j][i] = r(x[i], x[j], y[i], y[j])
-
+        array_r[j][i] = array_r[i][j]
+    print(array_r[i])
 # ускорения тел
 ax = [-1] * n
 ay = [-1] * n
@@ -117,7 +149,7 @@ fx = [-1] * (n - 1)
 fy = [-1] * (n - 1)
 
 # время между пересчетами
-dt = 1
+dt = 0.02
 
 # время с начала работы модели
 t = 0
@@ -148,6 +180,6 @@ while t < 100:
         vy[i] = count_v(vy[i], ay[i], dt)
         y[i] = count_coord(y[i], vy[i], dt)
     root.update()
-    t+=dt
+    t += dt
 
 root.mainloop()
