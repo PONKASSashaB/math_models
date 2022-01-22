@@ -1,3 +1,4 @@
+
 import sys
 import time
 import random
@@ -48,93 +49,25 @@ def out(x, y, i, point_size):
     canvas.create_oval(int(x + 1) - point_size, int(y + 1) - point_size, int(x + 1) + point_size, int(y + 1) + point_size, fill='black')
 
 # ввод с клавиатуры
-'''
+
 # количество тел
 print('Введите количество тел')
 n = int(input())
-
 print('Введите скорости сначала по оси х затем по оси у')
-
 # скорости по х
 vx = list(map(int, input().split()))
-
 # скорости по у
 vy = list(map(int, input().split()))
-
 print('Введите координаты сначала по оси х затем по оси у')
 x = list(map(int, input().split()))
 y = list(map(int, input().split()))
-
 array_r = [[] * n] * n
 for i in range(0, n):
     for j in range(i, n):
         array_r[i][j] = r(x[i], x[j], x[i], y[j])
-
 print('Введите массу')
 m = list(map(int, input().split()))
-'''
 
-# автоматическое создание переменных
-
-# сторона квадрата, образованного телами, четное
-number_of_points_on_line = 6
-
-# число тел
-n = number_of_points_on_line * number_of_points_on_line
-
-#массы
-m = [-1] * n
-
-# скорости по х
-vx = [-1] * n
-
-# скорости по у
-vy = [-1] * n
-
-#координаты
-x = [-1] * n
-y = [-1] * n
-
-# промедуток между соседними телами, четный
-step = 10
-
-# вспомогательная переменные
-index = n - 1
-if (number_of_points_on_line % 2 == 1):
-    helpvarx, helpvary = -(number_of_points_on_line // 2) * step, -(number_of_points_on_line // 2) * step
-else:
-    helpvarx, helpvary = -((number_of_points_on_line - 1) // 2) * step - step // 2, -((number_of_points_on_line - 1) // 2) * step - step // 2
-
-start_helpvarx = helpvarx
-# создание реальных значений для велечин
-while index >= 0:
-    for j in range(number_of_points_on_line):
-        x[index] = helpvarx
-        y[index] = helpvary
-        m[index] = 5
-        vx[index] = 0
-        vy[index] = 0
-        index -= 1
-        if (index < 0):
-            break
-
-        x[index] = helpvarx * -1
-        y[index] = helpvary * -1
-        m[index] = 5
-        vx[index] = 0
-        vy[index] = 0
-        index -= 1
-        if (index < 0):
-            break
-
-        helpvarx += step
-    helpvarx = start_helpvarx
-    helpvary += step
-
-for i in range(n):
-    y[i] += height_canvas // 2
-    x[i] += width_canvas // 2
-array_r = [[-1] * n] * n
 for i in range(0, n):
     for j in range(i, n):
         array_r[i][j] = r(x[i], x[j], y[i], y[j])
